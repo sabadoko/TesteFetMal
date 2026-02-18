@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ficha RPG</title>
+<title>Feiticeiros & Maldições</title>
+
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -14,23 +15,23 @@
 <div class="app">
 
     <aside class="sidebar">
-        <div class="logo">FICHAS</div>
-        <button class="primary-btn" onclick="novoPersonagem()">+ Novo</button>
+        <div class="logo">F&M</div>
+        <button class="btn-primary" onclick="novoPersonagem()">+ Novo Personagem</button>
         <div id="listaPersonagens" class="lista"></div>
     </aside>
 
-    <main class="content">
+    <main class="main">
 
         <section class="card">
-            <h2>Dados Básicos</h2>
+            <h2>Informações</h2>
             <div class="grid-2">
-                <div class="input-group">
+                <div class="field">
                     <label>Nome</label>
                     <input id="nome">
                 </div>
-                <div class="input-group">
+                <div class="field">
                     <label>Nível</label>
-                    <input type="number" id="nivel" min="1">
+                    <input type="number" id="nivel" min="1" value="1">
                 </div>
             </div>
         </section>
@@ -38,34 +39,48 @@
         <section class="card">
             <h2>Atributos</h2>
             <div class="grid-3">
-                <div class="input-group"><label>FOR</label><input type="number" id="for"></div>
-                <div class="input-group"><label>DES</label><input type="number" id="des"></div>
-                <div class="input-group"><label>CON</label><input type="number" id="con"></div>
-                <div class="input-group"><label>INT</label><input type="number" id="int"></div>
-                <div class="input-group"><label>SAB</label><input type="number" id="sab"></div>
-                <div class="input-group"><label>CAR</label><input type="number" id="car"></div>
+                <div class="field"><label>Força</label><input type="number" id="for"></div>
+                <div class="field"><label>Destreza</label><input type="number" id="des"></div>
+                <div class="field"><label>Constituição</label><input type="number" id="con"></div>
+                <div class="field"><label>Inteligência</label><input type="number" id="int"></div>
+                <div class="field"><label>Sabedoria</label><input type="number" id="sab"></div>
+                <div class="field"><label>Carisma</label><input type="number" id="car"></div>
             </div>
         </section>
 
         <section class="card">
-            <h2>Valores</h2>
+            <h2>Status</h2>
             <div class="grid-3">
-                <div class="input-group"><label>PV</label><input id="pv"></div>
-                <div class="input-group"><label>PE</label><input id="pe"></div>
-                <div class="stat-box">
+                <div class="field">
+                    <label>Pontos de Vida</label>
+                    <input id="pv">
+                </div>
+                <div class="field">
+                    <label>Pontos de Energia</label>
+                    <input id="pe">
+                </div>
+                <div class="stat">
                     <span>Defesa</span>
                     <strong id="defesa"></strong>
                 </div>
-                <div class="stat-box">
+                <div class="stat">
                     <span>Iniciativa</span>
                     <strong id="iniciativa"></strong>
+                </div>
+                <div class="stat">
+                    <span>Mod. Força</span>
+                    <strong id="modFor"></strong>
+                </div>
+                <div class="stat">
+                    <span>Mod. Destreza</span>
+                    <strong id="modDes"></strong>
                 </div>
             </div>
         </section>
 
         <section class="card">
             <h2>Configurações</h2>
-            <label class="toggle">
+            <label class="switch">
                 <input type="checkbox" id="autoProgressao" checked>
                 <span></span>
                 Progressão Automática
@@ -81,7 +96,6 @@
         </section>
 
     </main>
-
 </div>
 
 <script src="script.js"></script>
