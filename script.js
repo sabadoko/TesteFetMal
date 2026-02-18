@@ -1,123 +1,352 @@
-let personagens = JSON.parse(localStorage.getItem("personagens")) || [];
-let atual = null;
+* { box-sizing: border-box; }
 
-function salvar() {
-    localStorage.setItem("personagens", JSON.stringify(personagens));
-    atualizarLista();
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #0f0f0f, #181818);
+    color: #e8e8e8;
 }
 
-function novoPersonagem() {
-    let p = {
-        nome: "Novo",
-        nivel: 1,
-        for: 10, des: 10, con: 10,
-        int: 10, sab: 10, car: 10,
-        pv: 10,
-        pe: 10,
-        auto: true
-    };
-    personagens.push(p);
-    atual = personagens.length - 1;
-    salvar();
-    carregar();
+.app {
+    display: flex;
+    min-height: 100vh;
 }
 
-function atualizarLista() {
-    let lista = document.getElementById("listaPersonagens");
-    lista.innerHTML = "";
-    personagens.forEach((p, i) => {
-        let btn = document.createElement("button");
-        btn.innerText = p.nome;
-        btn.onclick = () => { atual = i; carregar(); };
-        lista.appendChild(btn);
-    });
+.sidebar {
+    width: 260px;
+    background: #141414;
+    border-right: 1px solid #222;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
-function carregar() {
-    if (atual === null) return;
-    let p = personagens[atual];
-    nome.value = p.nome;
-    nivel.value = p.nivel;
-    for.value = p.for;
-    des.value = p.des;
-    con.value = p.con;
-    int.value = p.int;
-    sab.value = p.sab;
-    car.value = p.car;
-    pv.value = p.pv;
-    pe.value = p.pe;
-    autoProgressao.checked = p.auto;
-    calcular();
+.logo {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    letter-spacing: 3px;
 }
 
-function calcular() {
-    if (atual === null) return;
-    let p = personagens[atual];
-
-    p.nome = nome.value;
-    p.nivel = parseInt(nivel.value);
-    p.for = parseInt(for.value);
-    p.des = parseInt(des.value);
-    p.con = parseInt(con.value);
-    p.int = parseInt(int.value);
-    p.sab = parseInt(sab.value);
-    p.car = parseInt(car.value);
-    p.auto = autoProgressao.checked;
-
-    let modDes = Math.floor((p.des - 10) / 2);
-    let modCon = Math.floor((p.con - 10) / 2);
-
-    if (p.auto) {
-        p.pv = 10 + modCon + (p.nivel * 5);
-        p.pe = 10 + (p.nivel * 3);
-        pv.value = p.pv;
-        pe.value = p.pe;
-    } else {
-        p.pv = parseInt(pv.value);
-        p.pe = parseInt(pe.value);
-    }
-
-    defesa.innerText = 10 + modDes + Math.floor(p.nivel / 2);
-    iniciativa.innerText = modDes;
-
-    salvar();
+.btn-primary {
+    background: #262626;
+    border: 1px solid #333;
+    padding: 10px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 20px;
 }
 
-document.querySelectorAll("input").forEach(el => {
-    el.addEventListener("input", calcular);
-});
-
-function exportarJSON() {
-    if (atual === null) return;
-    let data = JSON.stringify(personagens[atual]);
-    let blob = new Blob([data], {type: "application/json"});
-    let a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = personagens[atual].nome + ".json";
-    a.click();
+.btn-primary:hover {
+    background: #333;
 }
 
-document.getElementById("importarExcel").addEventListener("change", function(e) {
-    let reader = new FileReader();
-    reader.onload = function(evt) {
-        let data = new Uint8Array(evt.target.result);
-        let workbook = XLSX.read(data, {type: "array"});
-        let sheet = workbook.Sheets[workbook.SheetNames[0]];
-        let json = XLSX.utils.sheet_to_json(sheet);
+.lista button {
+    background: transparent;
+    border: none;
+    color: #ccc;
+    padding: 8px;
+    text-align: left;
+    width: 100%;
+    border-radius: 6px;
+    cursor: pointer;
+}
 
-        if (json.length > 0) {
-            let linha = json[0];
-            nome.value = linha.Nome || nome.value;
-            for.value = linha.FOR || for.value;
-            des.value = linha.DES || des.value;
-            con.value = linha.CON || con.value;
-            int.value = linha.INT || int.value;
-            sab.value = linha.SAB || sab.value;
-            car.value = linha.CAR || car.value;
-            calcular();
-        }
-    };
-    reader.readAsArrayBuffer(e.target.files[0]);
-});
+.lista button:hover {
+    background: #222;
+}
 
-atualizarLista();
+.main {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.card {
+    background: #1c1c1c;
+    border: 1px solid #2a2a2a;
+    padding: 20px;
+    border-radius: 14px;
+}
+
+.card h2 {
+    margin-top: 0;
+    font-weight: 400;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+}
+
+.field label {
+    font-size: 12px;
+    opacity: 0.6;
+    margin-bottom: 5px;
+}
+
+input {
+    background: #101010;
+    border: 1px solid #333;
+    padding: 8px;
+    border-radius: 8px;
+    color: white;
+}
+
+input:focus {
+    outline: none;
+    border-color: #555;
+}
+
+.stat {
+    background: #101010;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+}
+
+.stat span {
+    font-size: 12px;
+    opacity: 0.6;
+}
+
+.stat strong {
+    display: block;
+    margin-top: 5px;
+    font-size: 20px;
+}
+
+.switch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.switch input {
+    display: none;
+}
+
+.switch span {
+    width: 40px;
+    height: 20px;
+    background: #333;
+    border-radius: 20px;
+    position: relative;
+    transition: .2s;
+}
+
+.switch span::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: .2s;
+}
+
+.switch input:checked + span {
+    background: #4caf50;
+}
+
+.switch input:checked + span::after {
+    transform: translateX(20px);
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #0f0f0f, #181818);
+    color: #e8e8e8;
+}
+
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 260px;
+    background: #141414;
+    border-right: 1px solid #222;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    letter-spacing: 3px;
+}
+
+.btn-primary {
+    background: #262626;
+    border: 1px solid #333;
+    padding: 10px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.btn-primary:hover {
+    background: #333;
+}
+
+.lista button {
+    background: transparent;
+    border: none;
+    color: #ccc;
+    padding: 8px;
+    text-align: left;
+    width: 100%;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.lista button:hover {
+    background: #222;
+}
+
+.main {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.card {
+    background: #1c1c1c;
+    border: 1px solid #2a2a2a;
+    padding: 20px;
+    border-radius: 14px;
+}
+
+.card h2 {
+    margin-top: 0;
+    font-weight: 400;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+}
+
+.field label {
+    font-size: 12px;
+    opacity: 0.6;
+    margin-bottom: 5px;
+}
+
+input {
+    background: #101010;
+    border: 1px solid #333;
+    padding: 8px;
+    border-radius: 8px;
+    color: white;
+}
+
+input:focus {
+    outline: none;
+    border-color: #555;
+}
+
+.stat {
+    background: #101010;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+}
+
+.stat span {
+    font-size: 12px;
+    opacity: 0.6;
+}
+
+.stat strong {
+    display: block;
+    margin-top: 5px;
+    font-size: 20px;
+}
+
+.switch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.switch input {
+    display: none;
+}
+
+.switch span {
+    width: 40px;
+    height: 20px;
+    background: #333;
+    border-radius: 20px;
+    position: relative;
+    transition: .2s;
+}
+
+.switch span::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: .2s;
+}
+
+.switch input:checked + span {
+    background: #4caf50;
+}
+
+.switch input:checked + span::after {
+    transform: translateX(20px);
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
