@@ -1,10 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-    <title>Meu Primeiro Site</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ficha RPG</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 </head>
 <body>
-    <h1>Olá, mundo!</h1>
-    <p>Meu site está online 🚀</p>
+
+<div class="sidebar">
+    <button onclick="novoPersonagem()">+ Novo Personagem</button>
+    <div id="listaPersonagens"></div>
+</div>
+
+<div class="main">
+    <h2>Dados Básicos</h2>
+    <input id="nome" placeholder="Nome do personagem">
+    <input id="nivel" type="number" value="1" min="1">
+
+    <h2>Atributos</h2>
+    <div class="atributos">
+        <div>FOR <input type="number" id="for"></div>
+        <div>DES <input type="number" id="des"></div>
+        <div>CON <input type="number" id="con"></div>
+        <div>INT <input type="number" id="int"></div>
+        <div>SAB <input type="number" id="sab"></div>
+        <div>CAR <input type="number" id="car"></div>
+    </div>
+
+    <h2>Valores</h2>
+    <div class="valores">
+        <div>PV <input id="pv"></div>
+        <div>PE <input id="pe"></div>
+        <div>Defesa <span id="defesa"></span></div>
+        <div>Iniciativa <span id="iniciativa"></span></div>
+    </div>
+
+    <h2>Configurações</h2>
+    <label>
+        <input type="checkbox" id="autoProgressao" checked>
+        Progressão Automática
+    </label>
+
+    <h2>Importar / Exportar</h2>
+    <input type="file" id="importarExcel">
+    <button onclick="exportarJSON()">Exportar JSON</button>
+
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
